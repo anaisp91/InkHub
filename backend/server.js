@@ -1,15 +1,9 @@
 import express from "express";
 import mongoose from "mongoose";
-
-//! require("dotenv").config(); error de definicion, cambio de importacion
 import dotenv from "dotenv";
 dotenv.config();
 
-//*IMPORTACION MODELOS
-import { Studio } from "./models/StudioModel.js";
-
 const app = express();
-
 app.use(express.json());
 
 mongoose
@@ -17,22 +11,18 @@ mongoose
   .then(() => console.log("Estas conectado a la base de datos"))
   .catch(() => console.log("Error al conectar a la BBDD"));
 
-// //*RUTAS CREAR ESTUDIO
-// app.post("/createStudio", async (req, res) => {
-//   try {
-//     const newStudio = new Studio(req.body);
-//     const saveStudio = await newStudio.save();
-//     res.status(201).json(saveStudio);
-//   } catch (err) {
-//     res.status(400).json({ error: err.message });
-//   }
-// });
+//*IMPORTACION ROUTERS
+import { router as StudioRoutes } from "./routes/StudioRoutes.js";
+app.use("/api/studio", StudioRoutes);
 
-//*RUTA PARA TRAER LOS estudios
-app.get("/", async (req, res) => {
-  const allStudios = await Studio.find();
-  res.json(allStudios);
-});
+import { router as ArtistsRoutes } from "./routes/ArtistRoutes.js";
+app.use("/api/artists", ArtistsRoutes);
+
+import { router as ClientsRoutes } from "./routes/ClientRoutes.js";
+app.use("/api/clients", ClientsRoutes);
+
+import { router as ConsentsRouter } from "./routes/ConsentRoutes.js";
+app.use("/api/consents", ConsentsRouter);
 
 const PORT = process.env.PORT || 5000;
 

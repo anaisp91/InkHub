@@ -8,8 +8,18 @@ const ClientSchema = new mongoose.Schema({
   persId: { type: String, required: true, unique: true },
   phoneNum: { type: String, required: true },
   email: { type: String },
-  signature: { type: String, required: true, unique: true }, //guardado de imagen como URL
+  signature: { type: String, required: true }, //guardado de imagen como URL
+  studio: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Studio",
+    required: true,
+  },
+  artist: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Artist",
+    requiored: true,
+  },
 });
 
 const Client = mongoose.model("Client", ClientSchema);
-export default Client;
+export { Client, ClientSchema };
