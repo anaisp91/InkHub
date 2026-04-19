@@ -1,3 +1,4 @@
+//@ts-check
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
@@ -6,12 +7,14 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
+if (!process.env.MONGO_URI) {
+  throw new Error("MONGO_URI no esta definida en el .env");
+}
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("Estas conectado a la base de datos"))
   .catch(() => console.log("Error al conectar a la BBDD"));
 
-//*IMPORTACION ROUTERS
 import { router as StudioRoutes } from "./routes/StudioRoutes.js";
 app.use("/api/studio", StudioRoutes);
 

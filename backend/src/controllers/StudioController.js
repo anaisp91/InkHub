@@ -3,6 +3,7 @@ import { Client } from "../models/ClientModel.js";
 import { Studio } from "../models/StudioModel.js";
 
 //creamos estudio
+
 export const createStudio = async (req, res) => {
   try {
     const newStudio = new Studio(req.body);
@@ -59,7 +60,7 @@ export const studioClients = async (req, res) => {
       return res.status(404).json({ error: "Cliente no enconstrado" });
     }
 
-    return res.status(200).json(client);
+    return res.status(200).json(clients);
   } catch (err) {
     return res.status(400).json("Id invalido");
   }
