@@ -29,6 +29,9 @@ app.use("/api/clients", ClientsRoutes);
 import { router as ConsentsRouter } from "./routes/ConsentRoutes.js";
 app.use("/api/consents", ConsentsRouter);
 
+import { router as AuthRoutes } from "./routes/authRoutes.js";
+app.use("/api/auth", AuthRoutes);
+
 app.use((req, res) => res.status(404).json({ error: "Ruta no encontrada" }));
 
 import { errorsGes } from "./middlewares/errorsGes.js";

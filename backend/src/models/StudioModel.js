@@ -6,8 +6,7 @@ const StudioSchema = new mongoose.Schema(
     name: { type: String, required: true, unique: true },
     address: { type: String, required: true },
     phoneNum: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    artists: [{ type: mongoose.Schema.Types.ObjectId, ref: "Artist" }],
+    email: { type: String },
   },
   { timestamps: true },
 );
