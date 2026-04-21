@@ -1,5 +1,4 @@
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import { User } from "../models/UserModel.js";
 import { createToken } from "../utils/createToken.js";
 
@@ -40,7 +39,8 @@ export const register = async (req, res, next) => {
       password: hashed,
       role: "studio_admin",
     });
-    const token = createToken(createUser.id);
+    //@ts-ignore
+    const token = createToken(createUser._id);
 
     return res.status(201).json({
       user: {
@@ -67,14 +67,7 @@ export const register = async (req, res, next) => {
  */
 export const login = async (req, res) => {
   try {
-    /**
-     * @type {string}
-     */
-    const email = req.body.email;
-    /**
-     * @type {string}
-     */
-    const password = req.body.password;
+    const { email, password } = req.body;
     if (!email || !password) {
       return res
         .status(400)
@@ -88,11 +81,11 @@ export const login = async (req, res) => {
     if (!passwordOk) {
       return res.status(400).json({ error: "credenciales invalidas" });
     }
-
-    const token = createToken(user.id);
+    //@ts-ignore
+    const token = createToken(user._id);
     return res.status(200).json({
       user: {
-        id: user.id,
+        id: user._id,
         name: user.name,
         email: user.email,
       },
@@ -100,5 +93,23 @@ export const login = async (req, res) => {
     });
   } catch (err) {
     return res.status(500).json({ error: "Error en el servidor" });
+  }
+};
+
+/**
+ *
+ * @param {Request} req
+ * @param {Response} res
+ */
+export const getProfile = async (req, res) => {
+  try {
+    // @ts-ignore
+    const user = await User.findById(req.user.id).select("-password");
+    if (!user) {
+      return res.status(404).json({ error: "Usuario no encontrado" });
+    }
+    return res.status(200).json(user);
+  } catch (err) {
+    return res.status(500).json({ error: "Error del servidor" });
   }
 };
