@@ -3,6 +3,7 @@ import { User } from "../models/UserModel.js";
 import { createToken } from "../utils/createToken.js";
 import { Studio } from "../models/StudioModel.js";
 import { Artist } from "../models/ArtistModel.js";
+import { studioArtists } from "./StudioController.js";
 
 /**
  * @typedef {Object} RegisterStudioBody
@@ -82,10 +83,29 @@ export const registerStudio = async (req, res) => {
 };
 
 /**
+ * @typedef {Object} RegisterArtistBody
+ * @property {string} email
+ * @property {string} password
+ * @property {Object} studioData
+ * @property {string} studioData.name
+ * @property {string} studioData.address
+ * @property {string} studioData.phoneNum
+ * @property {Object} artistData
+ * @property {string} artistData.name
+ * @property {string} artistData.lastName
+ * @property {string} artistData.persId
+ * @property {string} artistData.phoneNum
+ * @property {string} artistData.SanNum
+ * @property {string} artistData.SanTitle
+ * @property {string} artistData.signature
+ * @property {string} artistData.studioId
+ *
+ */
+/**
  * @param {import("express").Request<{}, {}, RegisterArtistBody>} req
  * @param {import("express").Response} res
  */
-const registerArtist = async (req, res) => {
+export const registerArtist = async (req, res) => {
   try {
     const { email, password, artistData } = req.body;
     if (!email || !password || !artistData) {
@@ -99,7 +119,7 @@ const registerArtist = async (req, res) => {
       !artistData.SanNum ||
       !artistData.SanTitle ||
       !artistData.signature ||
-      !artistData.studiId
+      !artistData.studioId
     ) {
       return res.status(400).json({ error: "Los campos son obligatorios" });
     }
@@ -113,7 +133,7 @@ const registerArtist = async (req, res) => {
     if (!artist) {
       return res
         .status(400)
-        .json({ error: "Ha ocurrido un error al crear el estudio" });
+        .json({ error: "Ha ocurrido un error al crear el artista" });
     }
 
     const hashed = await bcrypt.hash(
@@ -123,13 +143,30 @@ const registerArtist = async (req, res) => {
 
     const createUser = await User.create({
       email,
-      password,
+      password: hashed,
       role: "artist",
       artistId: artist._id,
     });
 
-    const createToken = createToken(createUser._id);
-  } catch (err) {}
+    //@ts-ignore
+    const token = createToken(createUser._id);
+
+    return res.status(201).json({
+      user: {
+        id: createUser._id,
+        email: createUser.email,
+        artistId: createUser._id,
+        role: createUser.role,
+      },
+      artist: {
+        artist: artist._id,
+        studioId: artistData.studioId,
+      },
+      token,
+    });
+  } catch (err) {
+    return res.status(500).json({ error: "Error del servidor" });
+  }
 };
 
 /**
