@@ -7,6 +7,7 @@ const StudioSchema = new mongoose.Schema(
     address: { type: String, required: true },
     phoneNum: { type: String, required: true },
     email: { type: String },
+    role: { type: String },
   },
   { timestamps: true },
 );
