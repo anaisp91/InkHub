@@ -7,7 +7,11 @@ const StudioSchema = new mongoose.Schema(
     address: { type: String, required: true },
     phoneNum: { type: String, required: true },
     email: { type: String },
-    role: { type: String },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "user",
+      required: true,
+    },
   },
   { timestamps: true },
 );

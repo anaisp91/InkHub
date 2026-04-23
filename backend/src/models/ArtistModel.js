@@ -9,14 +9,16 @@ const ArtistSchema = new mongoose.Schema(
     phoneNum: { type: String, required: true },
     email: { type: String },
     SanNum: { type: String, required: true, unique: true }, //numero titulo higienico sanitario
-    SanTitle: { type: String, required: true }, //url-imagen titulo higienico sanitario
-    signature: { type: String, required: true }, //url-imagen firma para usar en consentimientos
-    studiId: {
+    studio: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Studio",
+      ref: "studio",
       required: true,
     },
-    role: {type: String}
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "user",
+      required: true,
+    },
   },
   { timestamps: true },
 );

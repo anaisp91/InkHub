@@ -26,3 +26,25 @@ export const auth = (req, res, next) => {
     next(err);
   }
 };
+
+/**
+ * @param {AuthRequest} req
+ * @param {import("express").Response} res
+ * @param {import("express").NextFunction} next
+ */
+export const verifyRole = async (req, res, next) => {
+  try {
+    const { id, role } = req.body;
+    if (!id || !role) {
+      return res.status(400).json({ error: "Datos no proporcionados" });
+    }
+    if (role !== "studio") {
+      return res
+        .status(400)
+        .json({ error: "Debes ser un estudio para crear artistas" });
+    }
+    next();
+  } catch (err) {
+    return res.status(400).json({ error: "No puedes crear un artista" });
+  }
+};
