@@ -50,43 +50,41 @@ import { Artist } from "../models/ArtistModel.js";
  */
 export const registerStudio = async (req, res) => {
   try {
-    //Desestructuracion de body
     const { email, password, studioData } = req.body;
 
-    //Validacion de campos obligatorios
     if (!email || !password || !studioData) {
       return res.status(400).json({ error: "Los campos son obligatorios" });
     }
-    //Validacion de datos del estudio
+
     if (!studioData.name || !studioData.address || !studioData.phoneNum) {
       return res.status(400).json({ error: "Faltan datos del estudio" });
     }
-    //Verificacion si el email ya existe
+
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(409).json({ error: "El email ya esta registrado" });
     }
-    //Hashear la constraseña
+
     const hashed = await bcrypt.hash(
       password,
       parseInt(process.env.BCRYPT_SALT_ROUNDS || "10"),
     );
-    //Crear el ususario
+
     const user = await User.create({
       email,
       password: hashed,
       role: "studio",
     });
-    //Crear el estudio asociado al usuario
+
     const studio = await Studio.create({
       user: user._id,
       name: studioData.name,
       address: studioData.address,
       phoneNum: studioData.phoneNum,
     });
-    //Generar token JWT
-    const token = createToken(user._id.toString());
-    //Respuesta exitosa
+
+    const token = createToken(user);
+
     return res.status(201).json({
       token,
       user: {
@@ -104,35 +102,61 @@ export const registerStudio = async (req, res) => {
     });
   } catch (err) {
     console.log(err);
-    //Respuesta de eerror genérica
     return res.status(500).json({ error: "Error de servidor" });
   }
 };
 
+/**
+ * @typedef {Object} RegisterArtistBody
+ * @property {string} email
+ * @property {string} password
+ * @property {Object} artistData
+ * @property {string} artistData.name
+ * @property {string} artistData.lastName
+ * @property {string} artistData.persId
+ * @property {string} artistData.phoneNum
+ * @property {string} artistData.SanNum
+ * @property {string} artistData.SanTitle
+ * @property {string} artistData.signature
+ * @property {string} artistData.studio
+ */
+/**
+ * @typedef {Object} Request
+ * @property {Object} body
+ * @property {string} body.email
+ * @property {string} body.password
+ * @property {Object} body.artistData
+ * @property {string} body.artistData.name
+ * @property {string} body.artistData.lastName
+ * @property {string} body.artistData.persId
+ * @property {string} body.artistData.phoneNum
+ * @property {string} body.artistData.SanNum
+ * @property {string} body.artistData.SanTitle
+ * @property {string} body.artistData.signature
+ * @property {string} body.artistData.studio
+ * @property {Object} user
+ * @property {string} user.id
+ * @property {string} user.role
+ */
+/**
+ * @typedef {Object} Response
+ * @property {number} status
+ * @property {function} json
+ */
+/**
+ * @param {import("express").Request<{}, {}, RegisterArtistBody>} req
+ * @param {import("express").Response} res
+ */
 export const registerArtist = async (req, res) => {
   try {
     const { email, password, artistData } = req.body;
     if (!email || !password || !artistData) {
       return res.status(400).json({ error: "Los campos son obligatorios" });
     }
-    if (
-      !artistData.name ||
-      !artistData.lastName ||
-      !artistData.persId ||
-      !artistData.phoneNum ||
-      !artistData.SanNum ||
-      !artistData.SanTitle ||
-      !artistData.signature ||
-      !artistData.studioId
-    ) {
-      return res
-        .status(400)
-        .json({ error: "Los datos del artista son obligatorios" });
-    }
 
-    const studio = await Studio.findById(artistData.studio);
+    const studio = await Studio.findOne({ user: req.user.id });
     if (!studio) {
-      return res.status(404).json({ error: "El estudio no existe" });
+      return res.status(404).json({ error: "No autorizado" });
     }
 
     const existingUser = await User.findOne({ email });
@@ -161,8 +185,6 @@ export const registerArtist = async (req, res) => {
       studio: studio._id,
     });
 
-    const token = createToken(user._id.toString());
-
     return res.status(201).json({
       user: {
         id: user._id,
@@ -172,9 +194,8 @@ export const registerArtist = async (req, res) => {
       artist: {
         id: artist._id,
         user: artist.user,
-        studio: artistData.studio,
+        studio: studio._id,
       },
-      token,
     });
   } catch (err) {
     console.log(err);

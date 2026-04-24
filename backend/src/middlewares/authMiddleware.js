@@ -2,13 +2,19 @@ import jwt from "jsonwebtoken";
 
 /**
  * @typedef {import("express").Request & {user?: { id: string}}} AuthRequest
+ * @property {Object} user
+ * @property {string} user.id
+ * @property {string} user.role
  */
 /**
- * @param {AuthRequest} req
- * @param {import("express").Request} req
- * @param {import("express").Response} res
- * @param {import("express").NextFunction} next
+ * Middleware de autenticación JWT
+ * Verifica el token Bearer en el header Authorization
+ *
+ * @param {AuthRequest}req - Objeto de solicitud de Express
+ * @param {import("express").Response} res - Objeto de respuesta de Express
+ * @param {import("express").NextFunction} next - Función next de Express
  */
+
 export const auth = (req, res, next) => {
   try {
     const header = req.headers.authorization || "";
@@ -16,35 +22,42 @@ export const auth = (req, res, next) => {
     if (type !== "Bearer" || !token) {
       return res.status(401).json({ error: "Token no proporcionado" });
     }
-    const verifyToken = jwt.verify(token, process.env.JWT_SECRET || "");
+    if (!process.env.JWT_SECRET) {
+      throw new Error("JWT_SECRET no definido");
+    }
+    const verifyToken = jwt.verify(token, process.env.JWT_SECRET);
     if (typeof verifyToken === "string") {
       return res.status(401).json({ error: "Token invalido" });
     }
-    req.user = { id: verifyToken.id };
+    req.user = {
+      id: verifyToken.id,
+      role: verifyToken.role,
+    };
+
     next();
   } catch (err) {
-    next(err);
+    return res.status(401).json({ error: "Token invalido" });
   }
 };
 
 /**
- * @param {AuthRequest} req
- * @param {import("express").Response} res
- * @param {import("express").NextFunction} next
+ *
+ * @param {string[]} allowedRoles
  */
-export const verifyRole = async (req, res, next) => {
-  try {
-    const { id, role } = req.body;
-    if (!id || !role) {
-      return res.status(400).json({ error: "Datos no proporcionados" });
+export const roleMidd = (allowedRoles) => {
+  /**
+   * @param {AuthRequest}req
+   * @param {import("express").Response} res
+   * @param {import("express").NextFunction} next
+   */
+  return (req, res, next) => {
+    if (!req.user) {
+      return res.status(401).json({ error: "No autenticado" });
     }
-    if (role !== "studio") {
-      return res
-        .status(400)
-        .json({ error: "Debes ser un estudio para crear artistas" });
+
+    if (!allowedRoles.includes(req.user.role)) {
+      return res.status(403).json({ error: "No autorizado" });
     }
     next();
-  } catch (err) {
-    return res.status(400).json({ error: "No puedes crear un artista" });
-  }
+  };
 };

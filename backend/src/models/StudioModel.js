@@ -6,7 +6,6 @@ const StudioSchema = new mongoose.Schema(
     name: { type: String, required: true, unique: true },
     address: { type: String, required: true },
     phoneNum: { type: String, required: true },
-    email: { type: String },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "user",

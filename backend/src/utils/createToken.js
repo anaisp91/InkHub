@@ -10,7 +10,7 @@ export const createToken = (userId) => {
     throw new Error("JWT_SECRET no está definido");
   }
   //@ts-ignore
-  return jwt.sign({ id: userId }, process.env.JWT_SECRET, {
+  return jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN || "1d",
   });
 };
