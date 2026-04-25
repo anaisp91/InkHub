@@ -1,3 +1,4 @@
+//@ts-checks
 import jwt from "jsonwebtoken";
 
 /**
@@ -25,15 +26,16 @@ export const auth = (req, res, next) => {
     if (!process.env.JWT_SECRET) {
       throw new Error("JWT_SECRET no definido");
     }
+
     const verifyToken = jwt.verify(token, process.env.JWT_SECRET);
     if (typeof verifyToken === "string") {
       return res.status(401).json({ error: "Token invalido" });
     }
     req.user = {
       id: verifyToken.id,
+      //@ts-ignore
       role: verifyToken.role,
     };
-
     next();
   } catch (err) {
     return res.status(401).json({ error: "Token invalido" });
@@ -54,7 +56,7 @@ export const roleMidd = (allowedRoles) => {
     if (!req.user) {
       return res.status(401).json({ error: "No autenticado" });
     }
-
+    //@ts-ignore
     if (!allowedRoles.includes(req.user.role)) {
       return res.status(403).json({ error: "No autorizado" });
     }

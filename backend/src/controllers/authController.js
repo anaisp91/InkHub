@@ -83,7 +83,12 @@ export const registerStudio = async (req, res) => {
       phoneNum: studioData.phoneNum,
     });
 
-    const token = createToken(user);
+    /** @type {{ _id: string; role: string }} */
+    const userForToken = {
+      _id: user._id.toString(),
+      role: user.role,
+    };
+    const token = createToken(userForToken);
 
     return res.status(201).json({
       token,
@@ -106,6 +111,9 @@ export const registerStudio = async (req, res) => {
   }
 };
 
+/**
+ * @typedef {import("express").Request & { user?: { id: string; role: string } }} AuthRequest
+ */
 /**
  * @typedef {Object} RegisterArtistBody
  * @property {string} email
@@ -144,6 +152,21 @@ export const registerStudio = async (req, res) => {
  * @property {function} json
  */
 /**
+ * @description
+ * Este endpoint permite a un estudio registrar un nuevo artista
+ * 1. Valida que todos los campos requeridos estén presentes
+ * 2. Verifica que el email no esté ya registrado
+ * 3. Hashea la contraseña usando bcrypt
+ * 4. Crea un usuario con rol "artist"
+ * 5. Crea el registro del artista vinculado al usuario
+ * @returns {Promise<Response>} Respuesta HTTP con el token de autenticación y los datos del usuario/artista
+ *
+ * @throws {400} - Bad Request: Campos faltantes o datos inválidos
+ * @throws {409} - Conflict: El email ya está registrado
+ * @throws {500} - Internal Server Error: Error del servidor
+ */
+/**
+ * @param {AuthRequest} req
  * @param {import("express").Request<{}, {}, RegisterArtistBody>} req
  * @param {import("express").Response} res
  */
@@ -153,7 +176,7 @@ export const registerArtist = async (req, res) => {
     if (!email || !password || !artistData) {
       return res.status(400).json({ error: "Los campos son obligatorios" });
     }
-
+    // @ts-ignore
     const studio = await Studio.findOne({ user: req.user.id });
     if (!studio) {
       return res.status(404).json({ error: "No autorizado" });
@@ -203,45 +226,44 @@ export const registerArtist = async (req, res) => {
   }
 };
 
-// /**
-//  * @typedef {import("express").Request} Request
-//  * @typedef {import("express").Response} Response
-//  */
-// /**
-//  *
-//  * @param {Request} req
-//  * @param {Response} res
-//  */
-// // export const login = async (req, res) => {
-// //   try {
-// //     const { email, password } = req.body;
-// //     if (!email || !password) {
-// //       return res
-// //         .status(400)
-// //         .json({ error: "Email y constraseña son obligatorios" });
-// //     }
-// //     const user = await User.findOne({ email });
-// //     if (!user) {
-// //       return res.status(400).json({ error: "Credenciales invalidas" });
-// //     }
-// //     const passwordOk = await bcrypt.compare(password, user.password);
-// //     if (!passwordOk) {
-// //       return res.status(400).json({ error: "credenciales invalidas" });
-// //     }
-// //     //@ts-ignore
-// //     const token = createToken(user._id);
-// //     return res.status(200).json({
-// //       user: {
-// //         id: user._id,
-// //         name: user.name,
-// //         email: user.email,
-// //       },
-// //       token,
-// //     });
-// //   } catch (err) {
-// //     return res.status(500).json({ error: "Error en el servidor" });
-// //   }
-// // };
+/**
+ * @param {import("express").Request} req
+ * @param {import("express").Response} res
+ */
+export const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ error: "Los campos son obligatorios" });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(401).json({ error: "Credenciales invalidas" });
+    }
+    const passwordOk = await bcrypt.compare(password, user.password);
+    if (!passwordOk) {
+      return res.status(401).json({ error: "Credenciales invalidas" });
+    }
+
+    const userForToken = {
+      _id: user._id.toString(),
+      role: user.role,
+    };
+    const token = createToken(userForToken);
+    return res.status(200).json({
+      user: {
+        id: user._id,
+        role: user.role,
+        email: user.email,
+      },
+      token,
+    });
+  } catch (err) {
+    console.error("LOGIN ERROR:", err);
+    return res.status(500).json({ error: "Error de servidor" });
+  }
+};
 
 // // /**
 // //  *
