@@ -6,6 +6,7 @@ import jwt from "jsonwebtoken";
  * @property {Object} user
  * @property {string} user.id
  * @property {string} user.role
+ * @property {string} user.email
  */
 /**
  * Middleware de autenticación JWT
@@ -35,6 +36,7 @@ export const auth = (req, res, next) => {
       id: verifyToken.id,
       //@ts-ignore
       role: verifyToken.role,
+      email: verifyToken.email,
     };
     next();
   } catch (err) {

@@ -6,9 +6,10 @@ import {
   registerStudio,
   registerArtist,
   login,
+  getProfile,
 } from "../controllers/authController.js";
 
 router.post("/register/studio", registerStudio);
 router.post("/register/artist", auth, roleMidd(["studio"]), registerArtist);
 router.post("/login", login);
-// router.get("/profile", auth, getProfile);
+router.get("/profile", auth, getProfile);

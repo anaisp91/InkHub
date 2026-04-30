@@ -1,7 +1,7 @@
 //@ts-check
 import jwt from "jsonwebtoken";
 /**
- * @param {{ _id: string; role: string }} userForToken
+ * @param {{ _id: string; role: string, email: string }} userForToken
  * @returns {string}
  */
 
@@ -15,7 +15,11 @@ export const createToken = (userForToken) => {
   // @ts-ignore - expiresIn acepta string o number
   const options = { expiresIn: process.env.JWT_EXPIRES_IN || "1d" };
   return jwt.sign(
-    { id: userForToken._id, role: userForToken.role },
+    {
+      id: userForToken._id,
+      role: userForToken.role,
+      email: userForToken.email,
+    },
     process.env.JWT_SECRET,
     options,
   );

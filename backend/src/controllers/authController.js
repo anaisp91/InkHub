@@ -83,10 +83,11 @@ export const registerStudio = async (req, res) => {
       phoneNum: studioData.phoneNum,
     });
 
-    /** @type {{ _id: string; role: string }} */
+    /** @type {{ _id: string; role: string, email: string }} */
     const userForToken = {
       _id: user._id.toString(),
       role: user.role,
+      email: user.email,
     };
     const token = createToken(userForToken);
 
@@ -112,7 +113,7 @@ export const registerStudio = async (req, res) => {
 };
 
 /**
- * @typedef {import("express").Request & { user?: { id: string; role: string } }} AuthRequest
+ * @typedef {import("express").Request & { user?: { id: string; role: string, email: string } }} AuthRequest
  */
 /**
  * @typedef {Object} RegisterArtistBody
@@ -145,6 +146,7 @@ export const registerStudio = async (req, res) => {
  * @property {Object} user
  * @property {string} user.id
  * @property {string} user.role
+ * @property {string} user.email
  */
 /**
  * @typedef {Object} Response
@@ -249,6 +251,7 @@ export const login = async (req, res) => {
     const userForToken = {
       _id: user._id.toString(),
       role: user.role,
+      email: user.email,
     };
     const token = createToken(userForToken);
     return res.status(200).json({
@@ -265,20 +268,66 @@ export const login = async (req, res) => {
   }
 };
 
-// // /**
-// //  *
-// //  * @param {Request} req
-// //  * @param {Response} res
-// //  */
-// // export const getProfile = async (req, res) => {
-// //   try {
-// //     // @ts-ignore
-// //     const user = await User.findById(req.user.id).select("-password");
-// //     if (!user) {
-// //       return res.status(404).json({ error: "Usuario no encontrado" });
-// //     }
-// //     return res.status(200).json(user);
-// //   } catch (err) {
-// //     return res.status(500).json({ error: "Error del servidor" });
-// //   }
-// // };
+/**
+ * @param {AuthRequest} req
+ * @param {import("express").Response} res
+ */
+export const getProfile = async (req, res) => {
+  try {
+    const user = req.user;
+
+    if (!user) {
+      return res.status(401).json({ error: "No autenticado" });
+    }
+
+    if (user.role === "studio") {
+      const studio = await Studio.findOne({ user: user.id }).select(
+        "name address phoneNum",
+      );
+
+      if (!studio) {
+        return res.status(404).json({ error: "Estudio no encontrado" });
+      }
+
+      return res.json({
+        user: {
+          id: user.id,
+          role: user.role,
+          email: user.email,
+        },
+        studio: {
+          id: studio._id,
+          name: studio.name,
+          address: studio.address,
+          phoneNum: studio.phoneNum,
+        },
+      });
+    }
+
+    if (user.role === "artist") {
+      const artist = await Artist.findOne({ user: user.id })
+        .populate("studio", "name")
+        .select("name studio");
+
+      if (!artist) {
+        return res.status(404).json({ error: "Artista no encotrado" });
+      }
+      return res.json({
+        user: {
+          id: user.id,
+          role: user.role,
+          email: user.email,
+        },
+        artist: {
+          id: artist._id,
+          name: artist.name,
+          studio: artist.studio,
+        },
+      });
+    }
+
+    return res.status(403).json({ error: "Rol no autorizado" });
+  } catch (err) {
+    return res.status(500).json({ error: "Error de servidor" });
+  }
+};
