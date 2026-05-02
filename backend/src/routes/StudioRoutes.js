@@ -2,7 +2,6 @@
 import {
   getAllStudios,
   getStudioById,
-  createStudio,
   studioArtists,
   studioClients,
   studioConsents,
@@ -14,11 +13,10 @@ import express from "express";
 const app = express();
 export const router = express.Router();
 
-router.post("/create", createStudio); //FUNCIONA
-router.get("/", getAllStudios); //FUNCIONA
-router.get("/:id", getStudioById); //FUNCIONA
-router.get("/:studioId/artists", studioArtists); //FUNCIONA
-router.get("/:studioId/clients", studioClients); //FUNCIONA
-router.get("/:studioId/consents", studioConsents); //FUNCIONA
-router.put("/:id", updateStudio); //FUNCIONA
-router.delete("/:id", deleteStudio); //FUNCIONA
+router.get("/", getAllStudios);
+router.get("/:id", getStudioById);
+router.get("/:studioId/artists", studioArtists);
+router.get("/:studioId/clients", studioClients);
+router.get("/:studioId/consents", studioConsents);
+router.put("/:id", updateStudio);
+router.delete("/:id", deleteStudio);

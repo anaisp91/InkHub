@@ -1,32 +1,11 @@
 //@ts-check
 import { Artist } from "../models/ArtistModel.js";
-import { Consent } from "../models/ConsentModel.js";
 
 /**
  * @typedef {import("express").Request} Request
  * @typedef {import("express").Response} Response
  * @typedef {import("express").NextFunction} Next
  */
-/**
- *
- *
- * @param {Request} req
- * @param {Response} res
- * @param {Next} next
- * @description Crea un nuevo artista en la base de datos.
- * Recibe los datos del artista en el cuerpo de la solicitud (req.body) y los guarda en la base de datos.
- * Si la creación es exitosa, devuelve el artista creado con un código de estado 201.
- * Si ocurre un error, devuelve un mensaje de error con un código de estado 400.
- */
-export const createArtist = async (req, res, next) => {
-  try {
-    const newArtist = new Artist(req.body);
-    const savedArtist = await newArtist.save();
-    return res.status(201).json(savedArtist);
-  } catch (err) {
-    next(err);
-  }
-};
 
 /**
  * @param {Request} req

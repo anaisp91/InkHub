@@ -12,25 +12,6 @@ import { Studio } from "../models/StudioModel.js";
 /**
  * @param {Request} req
  * @param {Response} res
- * @param {Next} next
- * @description Crea un nuevo estudio en la base de datos.
- * Recibe los datos del estudio en el cuerpo de la solicitud (req.body) y los guarda en la base de datos.
- * Si la creación es exitosa, devuelve el estudio creado con un código de estado 201.
- * Si ocurre un error, devuelve un mensaje de error con un código de estado 400.
- */
-export const createStudio = async (req, res, next) => {
-  try {
-    const newStudio = new Studio(req.body);
-    const saveStudio = await newStudio.save();
-    res.status(201).json(saveStudio);
-  } catch (err) {
-    next(err);
-  }
-};
-
-/**
- * @param {Request} req
- * @param {Response} res
  * @description Obtiene todos los estudios de la base de datos.
  * Realiza una consulta para obtener todos los documentos de la colección de estudios y los devuelve en formato JSON con un código de estado 200.
  * Si ocurre un error, devuelve un mensaje de error con un código de estado 400.
