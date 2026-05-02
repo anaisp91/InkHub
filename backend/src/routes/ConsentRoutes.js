@@ -5,6 +5,7 @@ import {
   getAllConsents,
   getConsentById,
   updateConsent,
+  signedConsent,
 } from "../controllers/ConsentController.js";
 
 import express from "express";
@@ -15,5 +16,6 @@ export const router = express.Router();
 router.post("/create", createConsent);
 router.get("/", getAllConsents);
 router.get("/:id", getConsentById);
+router.put("/:id/sign", signedConsent);
 router.put("/:id", updateConsent);
 router.delete("/:id", deleteConsent);

@@ -1,24 +1,40 @@
 //@ts-check
-import mongoose from "mongoose";
+import mongoose, { trusted } from "mongoose";
 
 const ConsentSchema = new mongoose.Schema(
   {
-    ClientId: {
+    client: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Client",
       required: true,
     },
     type: { type: String },
-    ArtistId: {
+    artist: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Artist",
       required: true,
     },
-    StudioId: {
+    studio: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Studio",
       required: true,
     },
+    status: {
+      type: String,
+      enum: ["pending", "signed", "rejected"],
+      default: "pending",
+    },
+    content: {
+      type: String,
+      required: true,
+    },
+    accepted: {
+      type: Boolean,
+      required: true,
+    },
+    description: { type: String },
+    bodyArea: { type: String },
+    signedAt: { type: Date },
   },
   { timestamps: true },
 );

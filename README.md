@@ -165,6 +165,7 @@ La creación de `studio` y `artist` está centralizada en el modelo `User`, lo q
 - `GET /consents`
 - `GET /consents/:id`
 - `PUT /consents/:id`
+- `PUT /consents/:id/sign` (endpoint especifico para la firma del consentimiento)
 - `DELETE /consents/:id`
 
 ---
@@ -207,6 +208,6 @@ La creación de `studio` y `artist` está centralizada en el modelo `User`, lo q
 
 ---
 
-## 📄 Licencia
+## Licencia
 
 MIT

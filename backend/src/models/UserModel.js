@@ -7,7 +7,6 @@ const UserSchema = new mongoose.Schema(
     password: { type: String, required: true, minlength: 6 },
     studio: { type: mongoose.Schema.Types.ObjectId, ref: "Studio" },
     artist: { type: mongoose.Schema.Types.ObjectId, ref: "Artist" },
-    // isActive: { type: Boolean, default: true },
   },
   { timestamps: true },
 );
