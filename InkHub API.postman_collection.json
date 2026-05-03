@@ -2,6 +2,7 @@
   "info": {
     "_postman_id": "e689e38e-260d-43cd-bd19-666b3093c993",
     "name": "InkHub API",
+    "description": "InkHub es una API diseñada para la gestión integral de estudios de tatuaje. Permite registrar estudios, administrar artistas asociados, gestionar clientes y digitalizar consentimientos, optimizando el almacenamiento y la trazabilidad de la información.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "51655987",
     "_collection_link": "https://go.postman.co/collection/51655987-e689e38e-260d-43cd-bd19-666b3093c993?source=collection_link"
@@ -17,7 +18,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \n    \"email\": \"irene@email.com\",\n    \"password\": \"passwordirene\",\n    \"studioData\": {\n        \"name\": \"irene tattoo\" ,\n        \"address\": \"calle irene\",\n        \"phoneNum\": \"52777777\"\n    }\n    \n    \n    \n}",
+              "raw": "{\n    \n    \"email\": \"example@email.com\",\n    \"password\": \"passwordexample\",\n    \"studioData\": {\n        \"name\": \"Example tattoo Studio\" ,\n        \"address\": \"example\",\n        \"phoneNum\": \"111111111\"\n    }\n    \n    \n    \n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -33,7 +34,8 @@
                 "register",
                 "studio"
               ]
-            }
+            },
+            "description": "Los estudios son el punto de entrada principal del sistema.  \nCada estudio se registra como un usuario con rol `\"studio\"` y obtiene automáticamente acceso para gestionar artistas, clientes y consentimientos."
           },
           "response": []
         },
@@ -54,7 +56,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"artist@test.com\",\n  \"password\": \"123456\",\n  \"artistData\": {\n    \"name\": \"Juan\",\n    \"lastName\": \"Perez\",\n    \"persId\": \"12345678A\",\n    \"phoneNum\": \"987654321\",\n    \"SanNum\": \"SAN123\"\n  }\n}",
+              "raw": "{\n  \"email\": \"artist12@test.com\",\n  \"password\": \"123456\",\n  \"artistData\": {\n    \"name\": \"artist 12\",\n    \"lastName\": \"art 12\",\n    \"persId\": \"65465554\",\n    \"phoneNum\": \"369855741\",\n    \"SanNum\": \"S11155011\"\n  }\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -70,7 +72,8 @@
                 "register",
                 "artist"
               ]
-            }
+            },
+            "description": "Los artistas solo pueden ser creados por un usuario con el rol \"studio\".\n\nCada artista queda vinculado automaticamente al estudio del usuario autenticado."
           },
           "response": []
         },
@@ -91,7 +94,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"email\": \"irene@email.com\",\n    \"password\": \"passwordirene\"\n\n}",
+              "raw": "{\n    \"email\": \"artist12@test.com\",\n    \"password\": \"123456\"\n\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -106,7 +109,8 @@
               "path": [
                 "login"
               ]
-            }
+            },
+            "description": "Autentica un usuario (studio o artist) devuelve su token JWT y user."
           },
           "response": []
         },
@@ -145,14 +149,16 @@
               "path": [
                 "profile"
               ]
-            }
+            },
+            "description": "Devuelve el perfil del usuario autenticado.\n\n- Si es \"studio\" → devuelve datos del estudio\n    \n- Si es \"artist\" → devuelve datos del artista y su estudio"
           },
           "response": []
         }
-      ]
+      ],
+      "description": "InkHub API utiliza autenticación basada en JWT.\n\nEl token debe enviarse en todas las peticiones protegidas mediante el header:\n\nAuthorization: Bearer\n\nEl token se obtiene tras iniciar sesión o registrar un estudio."
     },
     {
-      "name": "Stufio",
+      "name": "Studio",
       "item": [
         {
           "name": "All Studios",
@@ -164,7 +170,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"Gold Street\",\n    \"address\": \"Carrer de l or\",\n    \"phoneNum\": \"931867531\",\n    \"email\": \"info@goldstreet.com\"\n}",
+              "raw": "",
               "options": {
                 "raw": {
                   "language": "json"
@@ -179,7 +185,8 @@
               "path": [
                 ""
               ]
-            }
+            },
+            "description": "Devuelve todos los estudios registrados."
           },
           "response": []
         },
@@ -193,7 +200,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"Gold Street\",\n    \"address\": \"Carrer de l or\",\n    \"phoneNum\": \"931867531\",\n    \"email\": \"info@goldstreet.com\"\n}",
+              "raw": "",
               "options": {
                 "raw": {
                   "language": "json"
@@ -214,7 +221,8 @@
                   "value": "69e5df579e93c726e551b114"
                 }
               ]
-            }
+            },
+            "description": "Devuelve el estudio asociado a un id concreto."
           },
           "response": []
         },
@@ -228,7 +236,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"Gold Street\",\n    \"address\": \"Carrer de l or\",\n    \"phoneNum\": \"931867531\",\n    \"email\": \"info@goldstreet.com\"\n}",
+              "raw": "",
               "options": {
                 "raw": {
                   "language": "json"
@@ -250,7 +258,8 @@
                   "value": "69e5df579e93c726e551b114"
                 }
               ]
-            }
+            },
+            "description": "Devuelve a los artistas de un estudio con un id concreto."
           },
           "response": []
         },
@@ -264,7 +273,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"Gold Street\",\n    \"address\": \"Carrer de l or\",\n    \"phoneNum\": \"931867531\",\n    \"email\": \"info@goldstreet.com\"\n}",
+              "raw": "",
               "options": {
                 "raw": {
                   "language": "json"
@@ -286,7 +295,8 @@
                   "value": "69e248f10431fa22e0fdee91"
                 }
               ]
-            }
+            },
+            "description": "Devuelve a los clientes de un estudio con un id concreto."
           },
           "response": []
         },
@@ -300,7 +310,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"Gold Street\",\n    \"address\": \"Carrer de l or\",\n    \"phoneNum\": \"931867531\",\n    \"email\": \"info@goldstreet.com\"\n}",
+              "raw": "",
               "options": {
                 "raw": {
                   "language": "json"
@@ -322,7 +332,8 @@
                   "value": "69e5df8f9e93c726e551b115"
                 }
               ]
-            }
+            },
+            "description": "Devuelve los consentimientos de un estudio con un id concreto."
           },
           "response": []
         },
@@ -354,7 +365,8 @@
                   "value": "69e5df579e93c726e551b114"
                 }
               ]
-            }
+            },
+            "description": "Actualiza los datos de un estudio con un id concreto."
           },
           "response": []
         },
@@ -365,7 +377,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"Gold Street\",\n    \"address\": \"Carrer de l or\",\n    \"phoneNum\": \"931867531\",\n    \"email\": \"info@goldstreet.com\"\n}"
+              "raw": ""
             },
             "url": {
               "raw": "{{URL}}{{API_STUDIO}}/:id",
@@ -381,11 +393,13 @@
                   "value": "69e323d71e4e8701ff3698e3"
                 }
               ]
-            }
+            },
+            "description": "Elimina un estudio con un id concreto."
           },
           "response": []
         }
-      ]
+      ],
+      "description": "Los endpoints de Studio permiten gestionar la información del estudio de tatuajes y acceder a los artistas, clientes y consentimientos asociados."
     },
     {
       "name": "Artists",
@@ -400,7 +414,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"Gold Street\",\n    \"address\": \"Carrer de l or\",\n    \"phoneNum\": \"931867531\",\n    \"email\": \"info@goldstreet.com\"\n}",
+              "raw": "",
               "options": {
                 "raw": {
                   "language": "json"
@@ -415,7 +429,8 @@
               "path": [
                 ""
               ]
-            }
+            },
+            "description": "Devuleve todos los artistas."
           },
           "response": []
         },
@@ -429,7 +444,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"Gold Street\",\n    \"address\": \"Carrer de l or\",\n    \"phoneNum\": \"931867531\",\n    \"email\": \"info@goldstreet.com\"\n}",
+              "raw": "",
               "options": {
                 "raw": {
                   "language": "json"
@@ -450,7 +465,8 @@
                   "value": "69e5e427901854d40ceae986"
                 }
               ]
-            }
+            },
+            "description": "Devuelve a un artista con un id concreto."
           },
           "response": []
         },
@@ -482,7 +498,8 @@
                   "value": "69e5e427901854d40ceae986"
                 }
               ]
-            }
+            },
+            "description": "Actualiza un artista con un id concreto."
           },
           "response": []
         },
@@ -493,7 +510,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"Gold Street\",\n    \"address\": \"Carrer de l or\",\n    \"phoneNum\": \"931867531\",\n    \"email\": \"info@goldstreet.com\"\n}"
+              "raw": ""
             },
             "url": {
               "raw": "{{URL}}{{API_ARTIST}}/:id",
@@ -509,11 +526,13 @@
                   "value": "69e3268558acc3a62549e0bf"
                 }
               ]
-            }
+            },
+            "description": "Elimina a un artista con un id concreto."
           },
           "response": []
         }
-      ]
+      ],
+      "description": "Los endpoints de Artists permiten gestionar la información de los artistas."
     },
     {
       "name": "Clients",
@@ -540,7 +559,8 @@
               "path": [
                 "create"
               ]
-            }
+            },
+            "description": "Crea al cliente."
           },
           "response": []
         },
@@ -554,7 +574,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"Gold Street\",\n    \"address\": \"Carrer de l or\",\n    \"phoneNum\": \"931867531\",\n    \"email\": \"info@goldstreet.com\"\n}",
+              "raw": "",
               "options": {
                 "raw": {
                   "language": "json"
@@ -569,7 +589,8 @@
               "path": [
                 ""
               ]
-            }
+            },
+            "description": "Devuelve todos los clientes."
           },
           "response": []
         },
@@ -583,7 +604,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"Gold Street\",\n    \"address\": \"Carrer de l or\",\n    \"phoneNum\": \"931867531\",\n    \"email\": \"info@goldstreet.com\"\n}",
+              "raw": "",
               "options": {
                 "raw": {
                   "language": "json"
@@ -604,7 +625,8 @@
                   "value": "69f44b9c32d5338456444076"
                 }
               ]
-            }
+            },
+            "description": "Devuelve un cliente con un id en concreto."
           },
           "response": []
         },
@@ -636,7 +658,8 @@
                   "value": "69f44b9c32d5338456444076"
                 }
               ]
-            }
+            },
+            "description": "Actualiza un cliente con un id concreto."
           },
           "response": []
         },
@@ -647,7 +670,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"Gold Street\",\n    \"address\": \"Carrer de l or\",\n    \"phoneNum\": \"931867531\",\n    \"email\": \"info@goldstreet.com\"\n}"
+              "raw": ""
             },
             "url": {
               "raw": "{{URL}}{{API_CLIENTS}}/:id",
@@ -663,11 +686,13 @@
                   "value": "69e330a8b33a67045efeed3d"
                 }
               ]
-            }
+            },
+            "description": "Elimina a un cliente con un id en concreto."
           },
           "response": []
         }
-      ]
+      ],
+      "description": "Estos endpoints permiten gestionar la información los clientes."
     },
     {
       "name": "Consents",
@@ -694,7 +719,8 @@
               "path": [
                 "create"
               ]
-            }
+            },
+            "description": "Creación de un consentimiento."
           },
           "response": []
         },
@@ -708,7 +734,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"Gold Street\",\n    \"address\": \"Carrer de l or\",\n    \"phoneNum\": \"931867531\",\n    \"email\": \"info@goldstreet.com\"\n}",
+              "raw": "",
               "options": {
                 "raw": {
                   "language": "json"
@@ -723,7 +749,8 @@
               "path": [
                 ""
               ]
-            }
+            },
+            "description": "Devuelve todos los consentimientos."
           },
           "response": []
         },
@@ -737,7 +764,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"Gold Street\",\n    \"address\": \"Carrer de l or\",\n    \"phoneNum\": \"931867531\",\n    \"email\": \"info@goldstreet.com\"\n}",
+              "raw": "",
               "options": {
                 "raw": {
                   "language": "json"
@@ -758,7 +785,8 @@
                   "value": "69e62e26a2c66e4d9ee056cc"
                 }
               ]
-            }
+            },
+            "description": "Devuelve un copnsentimiento con un id concreto."
           },
           "response": []
         },
@@ -790,7 +818,8 @@
                   "value": "69e62e26a2c66e4d9ee056cc"
                 }
               ]
-            }
+            },
+            "description": "Actualiza un consentimiento con un id concreto"
           },
           "response": []
         },
@@ -801,7 +830,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n   \n\"StudioId\" :\"69e5df8f9e93c726e551b115\"\n}",
+              "raw": "",
               "options": {
                 "raw": {
                   "language": "json"
@@ -823,7 +852,8 @@
                   "value": "69f5b1594321d78f4b0e230e"
                 }
               ]
-            }
+            },
+            "description": "Firma un id y cambia el status a firmado, aceptado y añade la fecha de la firma."
           },
           "response": []
         },
@@ -834,7 +864,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"Gold Street\",\n    \"address\": \"Carrer de l or\",\n    \"phoneNum\": \"931867531\",\n    \"email\": \"info@goldstreet.com\"\n}"
+              "raw": ""
             },
             "url": {
               "raw": "{{URL}}{{API_CONSENTS}}/:id",
@@ -850,11 +880,13 @@
                   "value": "69e62c94b4ef2f1ab49dc6d9"
                 }
               ]
-            }
+            },
+            "description": "Elimina un consentimiento."
           },
           "response": []
         }
-      ]
+      ],
+      "description": "Estos endpoints gestionan la informacion de los consentimientos informados y la firma."
     }
   ]
 }

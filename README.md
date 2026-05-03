@@ -31,7 +31,7 @@ La API permite:
 
 ## Base URL
 
-https://tu-api.onrender.com
+https://inkhub.onrender.com
 
 ---
 
@@ -187,26 +187,9 @@ La creación de `studio` y `artist` está centralizada en el modelo `User`, lo q
 
 ---
 
-## Documentación de la API
+## Documentación de la API - POSTMAN
 
-### Swagger (OpenAPI)
-
-### Colección de Postman
-
-## Estructura del proyecto
-
-```
-/src
-  /controllers
-  /models
-  /routes
-  /middlewares
-  /utils
-  /server
-/config
-```
-
----
+https://go.postman.co/collection/51655987-e689e38e-260d-43cd-bd19-666b3093c993?source=collection_link
 
 ## Licencia
 
