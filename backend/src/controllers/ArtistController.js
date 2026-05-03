@@ -12,7 +12,6 @@ import { Artist } from "../models/ArtistModel.js";
  * @param {Response} res
  * @description Obtiene todos los artistas de la base de datos.
  * Realiza una consulta para obtener todos los documentos de la colección de artistas y los devuelve en formato JSON con un código de estado 200.
- * Si ocurre un error, devuelve un mensaje de error con un código de estado 400.
  */
 export const getAllArtist = async (req, res) => {
   const allArtists = await Artist.find();
@@ -38,7 +37,7 @@ export const getArtistById = async (req, res, next) => {
     const artist = await Artist.findById(id);
 
     if (!artist) {
-      return res.status(404).json({ error: "Artista no encontrado" });
+      return next({ status: 404 });
     }
 
     return res.status(200).json(artist);
@@ -67,7 +66,7 @@ export const updateArtist = async (req, res, next) => {
     });
 
     if (!updateArtist) {
-      return res.status(404).json({ error: "Usuario no encontrado" });
+      return next({ status: 404 });
     }
     return res.status(200).json(updateArtist);
   } catch (err) {
@@ -91,7 +90,7 @@ export const deleteArtist = async (req, res, next) => {
     const deleteArtist = await Artist.findByIdAndDelete(id);
 
     if (!deleteArtist) {
-      return res.status(404).json({ error: "Artista no encontrado" });
+      return next({ status: 404 });
     }
 
     return res.status(204).json("Artista eliminado");

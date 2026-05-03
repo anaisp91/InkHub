@@ -47,22 +47,23 @@ import { Artist } from "../models/ArtistModel.js";
 /**
  * @param {import("express").Request<{}, {}, RegisterStudioBody>} req
  * @param {import("express").Response} res
+ * @param {import("express").NextFunction} next
  */
-export const registerStudio = async (req, res) => {
+export const registerStudio = async (req, res, next) => {
   try {
     const { email, password, studioData } = req.body;
 
     if (!email || !password || !studioData) {
-      return res.status(400).json({ error: "Los campos son obligatorios" });
+      return next({ status: 400, error: "Los campos son obligatorios" });
     }
 
     if (!studioData.name || !studioData.address || !studioData.phoneNum) {
-      return res.status(400).json({ error: "Faltan datos del estudio" });
+      return next({ status: 400, error: "Faltan datos del estudio" });
     }
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(409).json({ error: "El email ya esta registrado" });
+      return next({ status: 409 });
     }
 
     const hashed = await bcrypt.hash(
@@ -107,8 +108,7 @@ export const registerStudio = async (req, res) => {
       },
     });
   } catch (err) {
-    console.log(err);
-    return res.status(500).json({ error: "Error de servidor" });
+    next(err);
   }
 };
 
@@ -161,32 +161,28 @@ export const registerStudio = async (req, res) => {
  * 3. Hashea la contraseña usando bcrypt
  * 4. Crea un usuario con rol "artist"
  * 5. Crea el registro del artista vinculado al usuario
- * @returns {Promise<Response>} Respuesta HTTP con el token de autenticación y los datos del usuario/artista
- *
- * @throws {400} - Bad Request: Campos faltantes o datos inválidos
- * @throws {409} - Conflict: El email ya está registrado
- * @throws {500} - Internal Server Error: Error del servidor
  */
 /**
  * @param {AuthRequest} req
  * @param {import("express").Request<{}, {}, RegisterArtistBody>} req
  * @param {import("express").Response} res
+ * @param {import('express').NextFunction} next
  */
-export const registerArtist = async (req, res) => {
+export const registerArtist = async (req, res, next) => {
   try {
     const { email, password, artistData } = req.body;
     if (!email || !password || !artistData) {
-      return res.status(400).json({ error: "Los campos son obligatorios" });
+      return next({ status: 400, error: "Los campos son obligatorios" });
     }
     // @ts-ignore
     const studio = await Studio.findOne({ user: req.user.id });
     if (!studio) {
-      return res.status(404).json({ error: "No autorizado" });
+      return next({ status: 404 });
     }
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(409).json({ error: "El email ya esta registrado" });
+      return next({ status: 409, error: "El email ya esta registrado" });
     }
 
     const hashed = await bcrypt.hash(
@@ -223,29 +219,29 @@ export const registerArtist = async (req, res) => {
       },
     });
   } catch (err) {
-    console.log(err);
-    return res.status(500).json({ error: "Error del servidor" });
+    next(err);
   }
 };
 
 /**
  * @param {import("express").Request} req
  * @param {import("express").Response} res
+ * @param {import ('express').NextFunction}next
  */
-export const login = async (req, res) => {
+export const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
-      return res.status(400).json({ error: "Los campos son obligatorios" });
+      return next({ status: 400, error: "Los campos son obligatorios" });
     }
 
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(401).json({ error: "Credenciales invalidas" });
+      return next({ status: 401, error: "Credenciales invalidas" });
     }
     const passwordOk = await bcrypt.compare(password, user.password);
     if (!passwordOk) {
-      return res.status(401).json({ error: "Credenciales invalidas" });
+      return next({ status: 401, error: "Credenciales invalidas" });
     }
 
     const userForToken = {
@@ -263,21 +259,21 @@ export const login = async (req, res) => {
       token,
     });
   } catch (err) {
-    console.error("LOGIN ERROR:", err);
-    return res.status(500).json({ error: "Error de servidor" });
+    next(err);
   }
 };
 
 /**
  * @param {AuthRequest} req
  * @param {import("express").Response} res
+ * @param {import ('express').NextFunction} next
  */
-export const getProfile = async (req, res) => {
+export const getProfile = async (req, res, next) => {
   try {
     const user = req.user;
 
     if (!user) {
-      return res.status(401).json({ error: "No autenticado" });
+      return next({ status: 401 });
     }
 
     if (user.role === "studio") {
@@ -286,7 +282,7 @@ export const getProfile = async (req, res) => {
       );
 
       if (!studio) {
-        return res.status(404).json({ error: "Estudio no encontrado" });
+        return next({ status: 404, error: "Estudio no encontrado" });
       }
 
       return res.json({
@@ -310,7 +306,7 @@ export const getProfile = async (req, res) => {
         .select("name studio");
 
       if (!artist) {
-        return res.status(404).json({ error: "Artista no encotrado" });
+        return next({ status: 404, error: "Artista no encontrado" });
       }
       return res.json({
         user: {
@@ -325,9 +321,7 @@ export const getProfile = async (req, res) => {
         },
       });
     }
-
-    return res.status(403).json({ error: "Rol no autorizado" });
   } catch (err) {
-    return res.status(500).json({ error: "Error de servidor" });
+    next(err);
   }
 };

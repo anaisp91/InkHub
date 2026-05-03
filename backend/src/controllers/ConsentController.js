@@ -9,20 +9,19 @@ import { Consent } from "../models/ConsentModel.js";
 /**
  * @param {Request} req
  * @param {Response} res
+ * @param {import("express").NextFunction} next
  * @description Crea un nuevo consentimiento en la base de datos.
  * Recibe los datos del consentimiento en el cuerpo de la solicitud (req.body) y los guarda en la base de datos.
  * Si la creación es exitosa, devuelve el consentimiento creado con un código de estado 201.
  * Si ocurre un error, devuelve un mensaje de error con un código de estado 400.
  */
-export const createConsent = async (req, res) => {
+export const createConsent = async (req, res, next) => {
   try {
     const { client, artist, studio, type, content, description, bodyArea } =
       req.body;
 
     if (!client || !artist || !studio || !content) {
-      return res
-        .status(400)
-        .json({ error: "Client , artist, studio y content son obligatorios" });
+      return next({ status: 400, error: "Los campos son obligatorios" });
     }
 
     const consent = new Consent({
@@ -39,25 +38,26 @@ export const createConsent = async (req, res) => {
     const savedConsent = await consent.save();
     return res.status(201).json(savedConsent);
   } catch (err) {
-    res.status(400).json({ error: "Error al crear el consentimiento" });
+    next(err);
   }
 };
 
 /**
  * @param {Request} req
  * @param {Response} res
+ * @param {import("express").NextFunction} next
  * @description Firmar un consentimiento.
  * Recibe el ID del consentimiento en los parámetros de la solicitud (req.params) y lo firma en la base de datos.
  * Si el consentimiento no se encuentra, devuelve un mensaje de error con un código de estado 404.
  * Si el consentimiento se encuentra, lo firma y lo devuelve con un código de estado 200.
  * Si ocurre un error durante la consulta (por ejemplo, si el ID no es válido), devuelve un mensaje de error con un código de estado 400.
  */
-export const signedConsent = async (req, res) => {
+export const signedConsent = async (req, res, next) => {
   try {
     const { id } = req.params;
     const consent = await Consent.findById(id);
     if (!consent) {
-      return res.status(404).json({ error: "Consentimiento no encontrado" });
+      return next({ status: 404, error: "Consentimiento no encontrado" });
     }
 
     consent.status = "signed";
@@ -66,8 +66,8 @@ export const signedConsent = async (req, res) => {
     await consent.save();
 
     return res.json(consent);
-  } catch (error) {
-    return res.status(500).json({ error: "error al firmar el consentimiento" });
+  } catch (err) {
+    next(err);
   }
 };
 
@@ -101,7 +101,7 @@ export const getConsentById = async (req, res, next) => {
     const consent = await Consent.findById(id);
 
     if (!consent) {
-      return res.status(404).json({ error: "Consentimiento no enconrado" });
+      return next({ status: 404, error: "Consentimiento no enconrado" });
     }
     return res.status(200).json(consent);
   } catch (err) {
@@ -129,7 +129,7 @@ export const updateConsent = async (req, res, next) => {
     });
 
     if (!updateConsent) {
-      return res.status(404).json({ error: "Consentimiento no encontrado" });
+      return next({ status: 404, error: "Consentimiento no encontrado" });
     }
     return res.status(200).json(updateConsent);
   } catch (err) {
@@ -153,7 +153,7 @@ export const deleteConsent = async (req, res, next) => {
     const deleteConsent = await Consent.findByIdAndDelete(id);
 
     if (!deleteConsent) {
-      return res.status(404).json("Consentimiento no encontrado");
+      return next({ status: 404, error: "Consentimiento no encontrado" });
     }
 
     return res.status(204).json("Consentimiento eliminado");

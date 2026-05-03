@@ -16,6 +16,10 @@ import { Consent } from "../models/ConsentModel.js";
  */
 export const createClient = async (req, res, next) => {
   try {
+    const { name, lastname, address, birthDate, persId, phoneNum } = req.body;
+    if (!name || !lastname || !address || !birthDate || !persId || !phoneNum) {
+      return next({ status: 400, error: "Los campos son obligatorios" });
+    }
     const newClient = new Client(req.body);
     const saveClient = await newClient.save();
     res.status(201).json(saveClient);
@@ -53,7 +57,7 @@ export const getClientById = async (req, res, next) => {
     const client = await Client.findById(id);
 
     if (!client) {
-      return res.status(404).json({ error: "Cliente no enconstrado" });
+      return next({ status: 404, error: "Cliente no encontrado" });
     }
     res.status(200).json(client);
   } catch (err) {
@@ -78,7 +82,7 @@ export const getConsentByClient = async (req, res, next) => {
     const consent = await Consent.find({ client: clientId });
 
     if (!consent) {
-      return res.status(404).json("Consetimiento no encontrado");
+      return next({ status: 404, error: "Consetimiento no encontrado" });
     }
 
     return res.status(200).json(consent);
@@ -107,7 +111,7 @@ export const updateClient = async (req, res, next) => {
     });
 
     if (!updateClient) {
-      return res.status(404).json({ error: "Cliente no encontrado" });
+      return next({ status: 404, error: "Cliente no encontrado" });
     }
     return res.status(200).json(updateClient);
   } catch (err) {
@@ -132,7 +136,7 @@ export const deleteClient = async (req, res, next) => {
     const deleteClient = await Client.findByIdAndDelete(id);
 
     if (!deleteClient) {
-      return res.status(404).json("Cliente no encontrado");
+      return next({ status: 404, error: "Cliente no encontrado" });
     }
 
     return res.status(204).json("Cliente eliminado");

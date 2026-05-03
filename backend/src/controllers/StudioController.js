@@ -37,7 +37,7 @@ export const getStudioById = async (req, res, next) => {
     const studio = await Studio.findById(id);
 
     if (!studio) {
-      return res.status(404).json({ error: "Estudio no encontrado" });
+      return next({ status: 404, error: "Estudio no encontrado" });
     }
     return res.status(200).json(studio);
   } catch (err) {
@@ -61,7 +61,7 @@ export const studioArtists = async (req, res, next) => {
     const artists = await Artist.find({ studio: studioId });
 
     if (!artists) {
-      return res.status(404).json({ error: "Artistas no encontrados" });
+      return next({ status: 404, error: "Artistas no encontrados" });
     }
     res.status(200).json(artists);
   } catch (err) {
@@ -85,7 +85,7 @@ export const studioClients = async (req, res, next) => {
     const clients = await Client.find({ studio: studioId });
 
     if (!clients) {
-      return res.status(404).json({ error: "Cliente no enconstrado" });
+      return next({ status: 404, error: "Cliente no enconstrado" });
     }
 
     return res.status(200).json(clients);
@@ -110,7 +110,7 @@ export const studioConsents = async (req, res, next) => {
     const consents = await Consent.find({ studio: studioId });
 
     if (!consents) {
-      return res.status(404).json("Consentimientos no encontrados");
+      return next({ status: 404, error: "Consentimientos no encontrados" });
     }
     return res.status(200).json(consents);
   } catch (err) {
@@ -137,7 +137,7 @@ export const updateStudio = async (req, res, next) => {
     });
 
     if (!updateStudio) {
-      return res.status(404).json({ error: "Estudio no encontrado" });
+      return next({ status: 404, error: "Estudio no encontrado" });
     }
 
     return res.status(200).json(updateStudio);
@@ -162,7 +162,7 @@ export const deleteStudio = async (req, res, next) => {
     const deleteStudio = await Studio.findByIdAndDelete(id);
 
     if (!deleteStudio) {
-      return res.status(404).json({ error: "Estudio no encontrado" });
+      return next({ status: 404, error: "Estudio no encontrado" });
     }
     return res.status(204).json("Estudio eliminado");
   } catch (err) {
