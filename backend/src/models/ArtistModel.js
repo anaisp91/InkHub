@@ -8,7 +8,7 @@ const ArtistSchema = new mongoose.Schema(
     persId: { type: String, required: true, unique: true },
     phoneNum: { type: String, required: true },
     email: { type: String },
-    SanNum: { type: String, required: true, unique: true }, //numero titulo higienico sanitario
+    SanNum: { type: String, required: true, unique: true },
     studio: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "studio",

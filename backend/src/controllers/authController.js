@@ -174,6 +174,18 @@ export const registerArtist = async (req, res, next) => {
     if (!email || !password || !artistData) {
       return next({ status: 400, error: "Los campos son obligatorios" });
     }
+    if (
+      !artistData.name ||
+      !artistData.lastName ||
+      !artistData.persId ||
+      !artistData.phoneNum ||
+      !artistData.SanNum
+    ) {
+      return next({
+        status: 400,
+        error: "Faltan datos obligatorios del artista",
+      });
+    }
     // @ts-ignore
     const studio = await Studio.findOne({ user: req.user.id });
     if (!studio) {
@@ -219,6 +231,7 @@ export const registerArtist = async (req, res, next) => {
       },
     });
   } catch (err) {
+    console.log("ERROR registerArtist", err);
     next(err);
   }
 };

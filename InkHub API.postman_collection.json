@@ -1,0 +1,860 @@
+{
+  "info": {
+    "_postman_id": "e689e38e-260d-43cd-bd19-666b3093c993",
+    "name": "InkHub API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "51655987",
+    "_collection_link": "https://go.postman.co/collection/51655987-e689e38e-260d-43cd-bd19-666b3093c993?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "auth/register/studio",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \n    \"email\": \"irene@email.com\",\n    \"password\": \"passwordirene\",\n    \"studioData\": {\n        \"name\": \"irene tattoo\" ,\n        \"address\": \"calle irene\",\n        \"phoneNum\": \"52777777\"\n    }\n    \n    \n    \n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}{{API_AUTH}}/register/studio",
+              "host": [
+                "{{URL}}{{API_AUTH}}"
+              ],
+              "path": [
+                "register",
+                "studio"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "auth/register/artist",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{vault:authorization-secret}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"artist@test.com\",\n  \"password\": \"123456\",\n  \"artistData\": {\n    \"name\": \"Juan\",\n    \"lastName\": \"Perez\",\n    \"persId\": \"12345678A\",\n    \"phoneNum\": \"987654321\",\n    \"SanNum\": \"SAN123\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}{{API_AUTH}}/register/artist",
+              "host": [
+                "{{URL}}{{API_AUTH}}"
+              ],
+              "path": [
+                "register",
+                "artist"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "auth/login",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"irene@email.com\",\n    \"password\": \"passwordirene\"\n\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}{{API_AUTH}}/login",
+              "host": [
+                "{{URL}}{{API_AUTH}}"
+              ],
+              "path": [
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "auth/profile",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{vault:authorization-secret}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"irene@email.com\",\n    \"password\": \"passwordirene\"\n\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}{{API_AUTH}}/profile",
+              "host": [
+                "{{URL}}{{API_AUTH}}"
+              ],
+              "path": [
+                "profile"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Stufio",
+      "item": [
+        {
+          "name": "All Studios",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Gold Street\",\n    \"address\": \"Carrer de l or\",\n    \"phoneNum\": \"931867531\",\n    \"email\": \"info@goldstreet.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}{{API_STUDIO}}/",
+              "host": [
+                "{{URL}}{{API_STUDIO}}"
+              ],
+              "path": [
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Studio By Id",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Gold Street\",\n    \"address\": \"Carrer de l or\",\n    \"phoneNum\": \"931867531\",\n    \"email\": \"info@goldstreet.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}{{API_STUDIO}}/:id",
+              "host": [
+                "{{URL}}{{API_STUDIO}}"
+              ],
+              "path": [
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "69e5df579e93c726e551b114"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Artists by Studio Id",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Gold Street\",\n    \"address\": \"Carrer de l or\",\n    \"phoneNum\": \"931867531\",\n    \"email\": \"info@goldstreet.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}{{API_STUDIO}}/:studioId/artists",
+              "host": [
+                "{{URL}}{{API_STUDIO}}"
+              ],
+              "path": [
+                ":studioId",
+                "artists"
+              ],
+              "variable": [
+                {
+                  "key": "studioId",
+                  "value": "69e5df579e93c726e551b114"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Clients By Studio Id",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Gold Street\",\n    \"address\": \"Carrer de l or\",\n    \"phoneNum\": \"931867531\",\n    \"email\": \"info@goldstreet.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}{{API_STUDIO}}/:studioId/clients",
+              "host": [
+                "{{URL}}{{API_STUDIO}}"
+              ],
+              "path": [
+                ":studioId",
+                "clients"
+              ],
+              "variable": [
+                {
+                  "key": "studioId",
+                  "value": "69e248f10431fa22e0fdee91"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Consents By Studio Id",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Gold Street\",\n    \"address\": \"Carrer de l or\",\n    \"phoneNum\": \"931867531\",\n    \"email\": \"info@goldstreet.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}{{API_STUDIO}}/:studioId/consents",
+              "host": [
+                "{{URL}}{{API_STUDIO}}"
+              ],
+              "path": [
+                ":studioId",
+                "consents"
+              ],
+              "variable": [
+                {
+                  "key": "studioId",
+                  "value": "69e5df8f9e93c726e551b115"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Studio",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n   \n\"address\" :\"calle calle\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}{{API_STUDIO}}/:id",
+              "host": [
+                "{{URL}}{{API_STUDIO}}"
+              ],
+              "path": [
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "69e5df579e93c726e551b114"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Studio",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Gold Street\",\n    \"address\": \"Carrer de l or\",\n    \"phoneNum\": \"931867531\",\n    \"email\": \"info@goldstreet.com\"\n}"
+            },
+            "url": {
+              "raw": "{{URL}}{{API_STUDIO}}/:id",
+              "host": [
+                "{{URL}}{{API_STUDIO}}"
+              ],
+              "path": [
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "69e323d71e4e8701ff3698e3"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Artists",
+      "item": [
+        {
+          "name": "All Artists",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Gold Street\",\n    \"address\": \"Carrer de l or\",\n    \"phoneNum\": \"931867531\",\n    \"email\": \"info@goldstreet.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}{{API_ARTIST}}/",
+              "host": [
+                "{{URL}}{{API_ARTIST}}"
+              ],
+              "path": [
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Artists By Id",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Gold Street\",\n    \"address\": \"Carrer de l or\",\n    \"phoneNum\": \"931867531\",\n    \"email\": \"info@goldstreet.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}{{API_ARTIST}}/:id",
+              "host": [
+                "{{URL}}{{API_ARTIST}}"
+              ],
+              "path": [
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "69e5e427901854d40ceae986"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Artist",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n   \n\"name\" :\"artista de la pista\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}{{API_ARTIST}}/:id",
+              "host": [
+                "{{URL}}{{API_ARTIST}}"
+              ],
+              "path": [
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "69e5e427901854d40ceae986"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Artist",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Gold Street\",\n    \"address\": \"Carrer de l or\",\n    \"phoneNum\": \"931867531\",\n    \"email\": \"info@goldstreet.com\"\n}"
+            },
+            "url": {
+              "raw": "{{URL}}{{API_ARTIST}}/:id",
+              "host": [
+                "{{URL}}{{API_ARTIST}}"
+              ],
+              "path": [
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "69e3268558acc3a62549e0bf"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Clients",
+      "item": [
+        {
+          "name": "Create Client",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"cliente 2\",\n    \"lastName\": \"apellido 2\",\n    \"address\": \"Calle 2\",\n    \"birthDate\": \"1991-01-21\",\n    \"persId\": \"1222222222\",\n    \"phoneNum\": \"1111111\",\n    \"signature\": \"1222222222\",\n    \"studio\": \"69e5df579e93c726e551b114\",\n    \"artist\": \"69e5e3dc901854d40ceae984\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}{{API_CLIENTS}}/create",
+              "host": [
+                "{{URL}}{{API_CLIENTS}}"
+              ],
+              "path": [
+                "create"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "All Clients",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Gold Street\",\n    \"address\": \"Carrer de l or\",\n    \"phoneNum\": \"931867531\",\n    \"email\": \"info@goldstreet.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}{{API_CLIENTS}}/",
+              "host": [
+                "{{URL}}{{API_CLIENTS}}"
+              ],
+              "path": [
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "ClientBy Id",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Gold Street\",\n    \"address\": \"Carrer de l or\",\n    \"phoneNum\": \"931867531\",\n    \"email\": \"info@goldstreet.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}{{API_CLIENTS}}/:id",
+              "host": [
+                "{{URL}}{{API_CLIENTS}}"
+              ],
+              "path": [
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "69f44b9c32d5338456444076"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Client",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n   \n\"name\" :\"clienta 2 updated\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}{{API_CLIENTS}}/:id",
+              "host": [
+                "{{URL}}{{API_CLIENTS}}"
+              ],
+              "path": [
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "69f44b9c32d5338456444076"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Client",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Gold Street\",\n    \"address\": \"Carrer de l or\",\n    \"phoneNum\": \"931867531\",\n    \"email\": \"info@goldstreet.com\"\n}"
+            },
+            "url": {
+              "raw": "{{URL}}{{API_CLIENTS}}/:id",
+              "host": [
+                "{{URL}}{{API_CLIENTS}}"
+              ],
+              "path": [
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "69e330a8b33a67045efeed3d"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Consents",
+      "item": [
+        {
+          "name": "Create Consent",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n   \n  \"client\": \"69f44b9c32d5338456444076\",\n  \"artist\": \"69e5e427901854d40ceae986\",\n  \"studio\": \"69e5df8f9e93c726e551b115\",\n  \"type\": \"tattoo\",\n  \"content\": \"Acepto voluntariamente la realización del tatuaje y asumo los riesgos asociados.\",\n  \"description\": \"Tatuaje estilo tribal en brazo\",\n  \"bodyArea\": \"brazo derecho\"\n\n\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}{{API_CONSENTS}}/create",
+              "host": [
+                "{{URL}}{{API_CONSENTS}}"
+              ],
+              "path": [
+                "create"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "All Consents",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Gold Street\",\n    \"address\": \"Carrer de l or\",\n    \"phoneNum\": \"931867531\",\n    \"email\": \"info@goldstreet.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}{{API_CONSENTS}}/",
+              "host": [
+                "{{URL}}{{API_CONSENTS}}"
+              ],
+              "path": [
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Consent By Id",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Gold Street\",\n    \"address\": \"Carrer de l or\",\n    \"phoneNum\": \"931867531\",\n    \"email\": \"info@goldstreet.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}{{API_CONSENTS}}/:id",
+              "host": [
+                "{{URL}}{{API_CONSENTS}}"
+              ],
+              "path": [
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "69e62e26a2c66e4d9ee056cc"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Consent",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n   \n\"StudioId\" :\"69e5df8f9e93c726e551b115\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}{{API_CONSENTS}}/:id",
+              "host": [
+                "{{URL}}{{API_CONSENTS}}"
+              ],
+              "path": [
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "69e62e26a2c66e4d9ee056cc"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sign Consent",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n   \n\"StudioId\" :\"69e5df8f9e93c726e551b115\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{URL}}{{API_CONSENTS}}/:id/sign",
+              "host": [
+                "{{URL}}{{API_CONSENTS}}"
+              ],
+              "path": [
+                ":id",
+                "sign"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "69f5b1594321d78f4b0e230e"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Consent",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Gold Street\",\n    \"address\": \"Carrer de l or\",\n    \"phoneNum\": \"931867531\",\n    \"email\": \"info@goldstreet.com\"\n}"
+            },
+            "url": {
+              "raw": "{{URL}}{{API_CONSENTS}}/:id",
+              "host": [
+                "{{URL}}{{API_CONSENTS}}"
+              ],
+              "path": [
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "69e62c94b4ef2f1ab49dc6d9"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
